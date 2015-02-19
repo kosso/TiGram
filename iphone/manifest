@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 2
+architectures: armv7 arm64 i386 x86_64
+description: TiGram
+author: Kosso
+license: Specify your license
+copyright: Copyright (c) 2015 by 
+
+# these should not be edited
+name: TiGram
+moduleid: com.kosso.tigram
+guid: bc70cbb5-fd41-4e6d-9790-35bf177a969f
+platform: iphone
+minsdk: 3.5.0.GA
