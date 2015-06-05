@@ -15,36 +15,6 @@
 @implementation ComKossoTigramModule
 @synthesize isInstalled;
 
-- (BOOL)openInstagram:(NSString *)filePath withCaption:(NSString *)caption
-{
-    if(![self.isInstalled boolValue])
-    {
-        return NO;
-    }
-    
-    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-    
-    RELEASE_TO_NIL(interactionController);
-    interactionController = [[UIDocumentInteractionController interactionControllerWithURL:fileURL] retain];
-    interactionController.UTI = @"com.instagram.exclusivegram";
-    interactionController.delegate = self;
-    interactionController.annotation = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         caption, @"InstagramCaption", nil];
-    
-    UIView *view = [TiApp controller].view;
-    BOOL present = [interactionController presentOpenInMenuFromRect:view.frame
-                                                             inView:view
-                                                           animated:YES];
-    
-    if (!present)
-    {
-        NSLog(@"[ERROR]Cannot open this type of the file.");
-        return NO;
-    }
-    
-    return YES;
-}
-
 
 #pragma mark Internal
 
@@ -134,6 +104,83 @@
 }
 
 #pragma Public APIs
+
+/*
+// via : http://stackoverflow.com/questions/20017266/posting-video-on-instagram-using-hooks
+
+NSURL *videoFilePath = ...; // Your local path to the video
+NSString *caption = @"Some Preloaded Caption";
+ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+[library writeVideoAtPathToSavedPhotosAlbum:[NSURL URLWithString:videoFilePath] completionBlock:^(NSURL *assetURL, NSError *error) {
+    NSURL *instagramURL = [NSURL URLWithString:[NSString stringWithFormat:@"instagram://library?AssetPath=%@&InstagramCaption=%@",[assetURL absoluteString].percentEscape,caption.percentEscape]];
+    if ([[UIApplication sharedApplication] canOpenURL:instagramURL]) {
+        [[UIApplication sharedApplication] openURL:instagramURL];
+    }
+}];
+
+*/
+// This method is a bit of a hack and doesn't use the Document Interaction Controller
+// See : http://blog.horizon.camera/post/102273431070/video-share-objc-ios-instagram
+- (BOOL)openVideoPath:(NSString*)assetPathString withCaption:(NSString*)caption
+{
+    if(![self.isInstalled boolValue])
+    {
+        return NO;
+    }    
+    NSString *escapedAssetPathString = [assetPathString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+    NSString *escapedCaption = [caption stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+    
+    NSLog(@"[INFO] openVideoPath : escapedAssetPathString : %@", escapedAssetPathString);
+
+    NSLog(@"[INFO] openVideoPath : escapedCaption : %@", escapedCaption);
+
+
+    NSURL *instagramURL = [NSURL URLWithString:[NSString stringWithFormat:@"instagram://library?AssetPath=%@&InstagramCaption=%@", escapedAssetPathString, escapedCaption]];
+ 
+    [[UIApplication sharedApplication] openURL:instagramURL];
+
+    return YES;
+}
+
+- (BOOL)openInstagram:(NSString *)filePath withCaption:(NSString *)caption
+{
+    if(![self.isInstalled boolValue])
+    {
+        return NO;
+    }
+    
+    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+    
+    RELEASE_TO_NIL(interactionController);
+    interactionController = [[UIDocumentInteractionController interactionControllerWithURL:fileURL] retain];
+    interactionController.UTI = @"com.instagram.exclusivegram";
+    interactionController.delegate = self;
+    interactionController.annotation = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         caption, @"InstagramCaption", nil];
+    UIView *view = [TiApp controller].view;
+    BOOL present = [interactionController presentOpenInMenuFromRect:view.frame
+                                                             inView:view
+                                                           animated:YES];
+    if (!present)
+    {
+        NSLog(@"[ERROR] Cannot open this type of the file.");
+        return NO;
+    }    
+    return YES;
+}
+
+
+- (void)openVideo:(id)args
+{
+    ENSURE_UI_THREAD_1_ARG(args);
+    ENSURE_SINGLE_ARG(args, NSDictionary);  
+    NSString *video_url = [args objectForKey:@"url"];
+
+    NSString *caption = [args objectForKey:@"caption"];
+    [self openVideoPath:video_url withCaption:caption];
+}
+
+
 
 - (void)openPhoto:(id)args
 {

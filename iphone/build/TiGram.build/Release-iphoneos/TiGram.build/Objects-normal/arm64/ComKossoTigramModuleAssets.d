@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/kosso/ti_modules/tigram/iphone/Classes/ComKossoTigramModuleAssets.m \
-  /Users/kosso/ti_modules/tigram/iphone/Classes/ComKossoTigramModuleAssets.h
+  /Users/kosso/ti_modules/TiGram/iphone/Classes/ComKossoTigramModuleAssets.m \
+  /Users/kosso/ti_modules/TiGram/iphone/Classes/ComKossoTigramModuleAssets.h

@@ -1,6 +1,6 @@
 dependencies: \
-  /Users/kosso/ti_modules/tigram/iphone/Classes/ComKossoTigramModule.m \
-  /Users/kosso/ti_modules/tigram/iphone/Classes/ComKossoTigramModule.h \
+  /Users/kosso/ti_modules/TiGram/iphone/Classes/ComKossoTigramModule.m \
+  /Users/kosso/ti_modules/TiGram/iphone/Classes/ComKossoTigramModule.h \
   /Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiModule.h \
   /Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiProxy.h \
   /Library/Application\ Support/Titanium/mobilesdk/osx/3.5.0.GA/iphone/include/TiBase.h \
